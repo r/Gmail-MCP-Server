@@ -1,0 +1,32 @@
+{
+  "manifestVersion": "1.0.0",
+  "name": "Gmail AutoAuth MCP Server",
+  "description": "Read, search, send emails, manage labels and filters via Gmail API with auto authentication",
+  "repository": "https://github.com/gongrzhe/server-gmail-autoauth-mcp",
+  "package": {
+    "type": "npm",
+    "name": "@gongrzhe/server-gmail-autoauth-mcp"
+  },
+  "execution": {
+    "transport": "stdio"
+  },
+  "oauth": {
+    "provider": "google",
+    "clientIdSource": "user",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.settings.basic"
+    ],
+    "apis": [
+      {
+        "name": "gmail.googleapis.com",
+        "displayName": "Gmail API",
+        "enableUrl": "https://console.cloud.google.com/apis/library/gmail.googleapis.com"
+      }
+    ],
+    "clientCredentialsPath": "~/.gmail-mcp/gcp-oauth.keys.json",
+    "clientCredentialsEnvVar": "GMAIL_OAUTH_PATH",
+    "tokenStoragePath": "~/.gmail-mcp/credentials.json",
+    "tokenStorageEnvVar": "GMAIL_CREDENTIALS_PATH"
+  }
+}

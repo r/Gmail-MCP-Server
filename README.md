@@ -5,6 +5,8 @@ A Model Context Protocol (MCP) server for Gmail integration in Claude Desktop wi
 ![](https://badge.mcpx.dev?type=server 'MCP Server')
 [![smithery badge](https://smithery.ai/badge/@gongrzhe/server-gmail-autoauth-mcp)](https://smithery.ai/server/@gongrzhe/server-gmail-autoauth-mcp)
 
+> **⚠️ Fork Notice**: This is a fork of [@gongrzhe/server-gmail-autoauth-mcp](https://github.com/gongrzhe/server-gmail-autoauth-mcp). See [Fork Changes](#fork-changes) for modifications from the original.
+
 
 ## Features
 
@@ -178,6 +180,50 @@ npx @gongrzhe/server-gmail-autoauth-mcp auth https://gmail.gongrzhe.com/oauth2ca
    ```
 
 This approach allows authentication flows to work properly in environments where localhost isn't accessible, such as containerized applications or cloud servers.
+
+### External OAuth Tokens (MCP Host Integration)
+
+For MCP hosts like Harbor that handle OAuth authentication externally, the server can accept pre-authenticated tokens via environment variables. This eliminates the need for users to create their own Google Cloud project.
+
+**Minimal usage (access token only):**
+```bash
+GMAIL_ACCESS_TOKEN=ya29.a0AfH6SMBx... npx @gongrzhe/server-gmail-autoauth-mcp
+```
+
+**With token refresh capability:**
+```bash
+GMAIL_ACCESS_TOKEN=ya29.a0AfH6SMBx... \
+GMAIL_REFRESH_TOKEN=1//0eXx... \
+GMAIL_CLIENT_ID=12345.apps.googleusercontent.com \
+GMAIL_CLIENT_SECRET=GOCSPX-... \
+npx @gongrzhe/server-gmail-autoauth-mcp
+```
+
+**Environment Variables:**
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `GMAIL_ACCESS_TOKEN` | Yes | The OAuth access token from the host |
+| `GMAIL_REFRESH_TOKEN` | No | Refresh token for automatic token renewal |
+| `GMAIL_CLIENT_ID` | No | OAuth client ID (required for auto-refresh) |
+| `GMAIL_CLIENT_SECRET` | No | OAuth client secret (required for auto-refresh) |
+
+When `GMAIL_ACCESS_TOKEN` is set, the server skips all file-based credential loading and uses the provided tokens directly.
+
+**MCP Host Configuration Example (Harbor):**
+```json
+{
+  "mcpServers": {
+    "gmail": {
+      "command": "npx",
+      "args": ["@gongrzhe/server-gmail-autoauth-mcp"],
+      "env": {
+        "GMAIL_ACCESS_TOKEN": "${GMAIL_ACCESS_TOKEN}"
+      }
+    }
+  }
+}
+```
 
 ## Available Tools
 
@@ -735,6 +781,12 @@ The evals package loads an mcp client that then runs the index.ts file, so there
 ```bash
 OPENAI_API_KEY=your-key  npx mcp-eval src/evals/evals.ts src/index.ts
 ```
+
+## Fork Changes
+
+This fork includes modifications from the [original repository](https://github.com/gongrzhe/server-gmail-autoauth-mcp).
+
+See [CHANGELOG.md](./CHANGELOG.md) for a detailed list of all changes.
 
 ## License
 

@@ -94,6 +94,20 @@ function extractEmailContent(messagePart: GmailMessagePart): EmailContent {
 }
 
 async function loadCredentials() {
+    // Check for externally-provided tokens (e.g., from Harbor or other MCP hosts)
+    if (process.env.GMAIL_ACCESS_TOKEN) {
+        oauth2Client = new OAuth2Client(
+            process.env.GMAIL_CLIENT_ID,
+            process.env.GMAIL_CLIENT_SECRET
+        );
+        oauth2Client.setCredentials({
+            access_token: process.env.GMAIL_ACCESS_TOKEN,
+            refresh_token: process.env.GMAIL_REFRESH_TOKEN,
+            token_type: 'Bearer',
+        });
+        return;
+    }
+
     try {
         // Create config directory if it doesn't exist
         if (!process.env.GMAIL_OAUTH_PATH && !CREDENTIALS_PATH &&!fs.existsSync(CONFIG_DIR)) {
