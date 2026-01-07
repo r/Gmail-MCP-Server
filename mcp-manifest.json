@@ -1,18 +1,28 @@
 {
   "manifestVersion": "1.0.0",
   "name": "Gmail AutoAuth MCP Server",
-  "description": "Read, search, send emails, manage labels and filters via Gmail API with auto authentication",
+  "description": "Read, search, send emails, manage labels and filters via Gmail API",
   "repository": "https://github.com/gongrzhe/server-gmail-autoauth-mcp",
+
   "package": {
     "type": "npm",
     "name": "@gongrzhe/server-gmail-autoauth-mcp"
   },
-  "execution": {
-    "transport": "stdio"
+
+  "runtime": {
+    "hasNativeCode": false
   },
+
+  "execution": {
+    "transport": "stdio",
+    "dockerMode": "optional"
+  },
+
   "oauth": {
     "provider": "google",
-    "clientIdSource": "user",
+    "supportedSources": ["host", "user"],
+    "preferredSource": "host",
+    "description": "Access to read, send, and manage Gmail messages, labels, filters, and settings",
     "scopes": [
       "https://www.googleapis.com/auth/gmail.modify",
       "https://www.googleapis.com/auth/gmail.settings.basic"
@@ -24,9 +34,17 @@
         "enableUrl": "https://console.cloud.google.com/apis/library/gmail.googleapis.com"
       }
     ],
-    "clientCredentialsPath": "~/.gmail-mcp/gcp-oauth.keys.json",
-    "clientCredentialsEnvVar": "GMAIL_OAUTH_PATH",
-    "tokenStoragePath": "~/.gmail-mcp/credentials.json",
-    "tokenStorageEnvVar": "GMAIL_CREDENTIALS_PATH"
+    "hostMode": {
+      "tokenEnvVar": "GMAIL_ACCESS_TOKEN",
+      "refreshTokenEnvVar": "GMAIL_REFRESH_TOKEN",
+      "clientIdEnvVar": "GMAIL_CLIENT_ID",
+      "clientSecretEnvVar": "GMAIL_CLIENT_SECRET"
+    },
+    "userMode": {
+      "clientCredentialsPath": "~/.gmail-mcp/gcp-oauth.keys.json",
+      "clientCredentialsEnvVar": "GMAIL_OAUTH_PATH",
+      "tokenStoragePath": "~/.gmail-mcp/credentials.json",
+      "tokenStorageEnvVar": "GMAIL_CREDENTIALS_PATH"
+    }
   }
 }
