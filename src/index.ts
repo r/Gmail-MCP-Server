@@ -94,8 +94,9 @@ function extractEmailContent(messagePart: GmailMessagePart): EmailContent {
 }
 
 async function loadCredentials() {
-    // Check for externally-provided tokens (e.g., from Harbor or other MCP hosts)
+    // Host-mode: tokens provided by MCP container (Harbor, etc.)
     if (process.env.GMAIL_ACCESS_TOKEN) {
+        console.error('[Gmail MCP] Using externally-provided OAuth tokens (host mode)');
         oauth2Client = new OAuth2Client(
             process.env.GMAIL_CLIENT_ID,
             process.env.GMAIL_CLIENT_SECRET
